@@ -967,6 +967,8 @@ enum class GLChunk : uint32_t
   glDrawElements,
   glDrawArrays,
   glEnable,
+  glEGLImageTargetTexture2DOES,
+  glEGLImageTargetRenderbufferStorageOES,
   glFlush,
   glFinish,
   glFrontFace,

@@ -322,6 +322,13 @@ void WrappedOpenGL::glBindBuffer(GLenum target, GLuint buffer)
 
   if(IsCaptureMode(m_State))
   {
+    GLResource res = BufferRes(GetCtx(), buffer);
+    if(!GetResourceManager()->HasCurrentResource(res))
+    {
+      ResourceId id = GetResourceManager()->RegisterResource(res);
+      /*GLResourceRecord *record = */GetResourceManager()->AddResourceRecord(id);
+    }
+
     GLResourceRecord *r = cd.m_BufferRecord[idx] =
         GetResourceManager()->GetResourceRecord(BufferRes(GetCtx(), buffer));
 

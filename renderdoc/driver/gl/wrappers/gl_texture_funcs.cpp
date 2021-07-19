@@ -294,6 +294,13 @@ void WrappedOpenGL::glBindTexture(GLenum target, GLuint texture)
 
   if(IsCaptureMode(m_State))
   {
+    GLResource res = TextureRes(GetCtx(), texture);
+    if(!GetResourceManager()->HasCurrentResource(res))
+    {
+      ResourceId id = GetResourceManager()->RegisterResource(res);
+      /*GLResourceRecord *record = */GetResourceManager()->AddResourceRecord(id);
+    }
+
     GLResourceRecord *r = GetResourceManager()->GetResourceRecord(TextureRes(GetCtx(), texture));
 
     if(r == NULL)
@@ -7098,6 +7105,21 @@ void WrappedOpenGL::glTextureFoveationParametersQCOM(GLuint texture, GLuint laye
   }
 }
 
+template <typename SerialiserType>
+bool WrappedOpenGL::Serialise_glEGLImageTargetTexture2DOES(SerialiserType &ser, GLenum target, GLeglImageOES image)
+{
+  return true;
+}
+
+void WrappedOpenGL::glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
+{
+  SERIALISE_TIME_CALL(GL.glEGLImageTargetTexture2DOES(target, image));
+
+  if(IsCaptureMode(m_State))
+  {
+  }
+}
+
 #pragma endregion
 
 INSTANTIATE_FUNCTION_SERIALISED(void, glGenTextures, GLsizei n, GLuint *textures);
@@ -7212,3 +7234,5 @@ INSTANTIATE_FUNCTION_SERIALISED(void, glInvalidateTexImage, GLuint texture, GLin
 INSTANTIATE_FUNCTION_SERIALISED(void, glInvalidateTexSubImage, GLuint texture, GLint level,
                                 GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width,
                                 GLsizei height, GLsizei depth);
+INSTANTIATE_FUNCTION_SERIALISED(void, glEGLImageTargetTexture2DOES, GLenum target,
+                                GLeglImageOES image);

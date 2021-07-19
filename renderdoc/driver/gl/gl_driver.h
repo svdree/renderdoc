@@ -911,6 +911,8 @@ public:
   IMPLEMENT_FUNCTION_SERIALISED(void, glPrimitiveRestartIndex, GLuint index);
   IMPLEMENT_FUNCTION_SERIALISED(void, glDisable, GLenum cap);
   IMPLEMENT_FUNCTION_SERIALISED(void, glEnable, GLenum cap);
+  IMPLEMENT_FUNCTION_SERIALISED(void, glEGLImageTargetTexture2DOES, GLenum, GLeglImageOES image);
+  IMPLEMENT_FUNCTION_SERIALISED(void, glEGLImageTargetRenderbufferStorageOES, GLenum, GLeglImageOES image);
   IMPLEMENT_FUNCTION_SERIALISED(void, glDisablei, GLenum cap, GLuint index);
   IMPLEMENT_FUNCTION_SERIALISED(void, glEnablei, GLenum cap, GLuint index);
   IMPLEMENT_FUNCTION_SERIALISED(void, glFrontFace, GLenum cap);

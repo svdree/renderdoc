@@ -539,6 +539,9 @@ void WrappedOpenGL::BuildGLESExtensions()
   m_GLESExtensions.push_back("EGL_KHR_create_context");
   m_GLESExtensions.push_back("EGL_KHR_surfaceless_context");
 
+  m_GLESExtensions.push_back("GL_OES_EGL_image");
+  m_GLESExtensions.push_back("GL_OES_EGL_image_external");
+
   // we'll be sorting the implementation extension array, so make sure the
   // sorts are identical so we can do the intersection easily
   std::sort(m_GLESExtensions.begin(), m_GLESExtensions.end());
@@ -4207,6 +4210,8 @@ bool WrappedOpenGL::ProcessChunk(ReadSerialiser &ser, GLChunk chunk)
     case GLChunk::glPrimitiveRestartIndex: return Serialise_glPrimitiveRestartIndex(ser, 0);
     case GLChunk::glDisable: return Serialise_glDisable(ser, eGL_NONE);
     case GLChunk::glEnable: return Serialise_glEnable(ser, eGL_NONE);
+  case GLChunk::glEGLImageTargetTexture2DOES: return Serialise_glEGLImageTargetTexture2DOES(ser, eGL_NONE, 0);
+  case GLChunk::glEGLImageTargetRenderbufferStorageOES: return Serialise_glEGLImageTargetRenderbufferStorageOES(ser, eGL_NONE, 0);
     case GLChunk::glDisableiEXT:
     case GLChunk::glDisableIndexedEXT:
     case GLChunk::glDisableiNV:

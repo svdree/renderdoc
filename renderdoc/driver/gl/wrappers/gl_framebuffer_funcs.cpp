@@ -1578,8 +1578,14 @@ void WrappedOpenGL::glBindFramebuffer(GLenum target, GLuint framebuffer)
 
   if(IsCaptureMode(m_State))
   {
-    GetResourceManager()->MarkFBOReferenced(FramebufferRes(GetCtx(), framebuffer),
-                                            eFrameRef_ReadBeforeWrite);
+    GLResource res = FramebufferRes(GetCtx(), framebuffer);
+    if(!GetResourceManager()->HasCurrentResource(res))
+    {
+      ResourceId id = GetResourceManager()->RegisterResource(res);
+      /*GLResourceRecord *record = */GetResourceManager()->AddResourceRecord(id);
+    }
+
+    GetResourceManager()->MarkFBOReferenced(res, eFrameRef_ReadBeforeWrite);
   }
 
   if(target == eGL_DRAW_FRAMEBUFFER || target == eGL_FRAMEBUFFER)
@@ -3179,6 +3185,17 @@ void WrappedOpenGL::glRenderbufferStorageMultisampleEXT(GLenum target, GLsizei s
   }
 }
 
+template <typename SerialiserType>
+bool WrappedOpenGL::Serialise_glEGLImageTargetRenderbufferStorageOES(SerialiserType &ser, GLenum target, GLeglImageOES image)
+{
+  return true;
+}
+
+void WrappedOpenGL::glEGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
+{
+  SERIALISE_TIME_CALL(GL.glEGLImageTargetRenderbufferStorageOES(target, image));
+}
+
 INSTANTIATE_FUNCTION_SERIALISED(void, glGenFramebuffers, GLsizei n, GLuint *framebuffers);
 INSTANTIATE_FUNCTION_SERIALISED(void, glCreateFramebuffers, GLsizei n, GLuint *framebuffers);
 INSTANTIATE_FUNCTION_SERIALISED(void, glNamedFramebufferTextureEXT, GLuint framebufferHandle,
@@ -3234,3 +3251,4 @@ INSTANTIATE_FUNCTION_SERIALISED(void, glNamedRenderbufferStorageMultisampleEXT,
 INSTANTIATE_FUNCTION_SERIALISED(void, glRenderbufferStorageMultisampleEXT,
                                 GLuint renderbufferHandle, GLsizei samples, GLenum internalformat,
                                 GLsizei width, GLsizei height);
+INSTANTIATE_FUNCTION_SERIALISED(void, glEGLImageTargetRenderbufferStorageOES, GLenum target, GLeglImageOES image);
